@@ -39,10 +39,12 @@ function App() {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.state.state==true){
+      if (data.state.state===true){
+        console.log(data);
         setBulbState("on"); 
       }
       else{
+        console.log(data);
         setBulbState("off"); 
       }
       setError('')
@@ -65,7 +67,7 @@ function App() {
     try {
       const response = await fetch(`${url}`, { 
         method: 'POST',
-        data: { "state":"true" } // Send action data
+        data: { "state":true} // Send action data
       });
       console.log(response);
 
@@ -124,7 +126,7 @@ console.log(errors);
       </div>
 
       <div className='Bulbstate'>
-        <p>Current Bulb State: {bulbState=="on"?<OnMode/>:<OffMode/>}</p>
+        <p>Current Bulb State: {bulbState}</p>
       </div>
     </div>
   );
