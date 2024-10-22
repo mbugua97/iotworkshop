@@ -7,54 +7,47 @@ import OnMode from './on';
 import OffMode from './off';
 
 const url = "http://16.16.70.217:8200/"; 
-const wss = "ws://16.16.70.217:8200/ws/bulbstate/"; 
+const wss = "ws://16.16.70.217:8200/ws/bulbstate/";
 
 function App() {
   const [bulbState, setBulbState] = useState('');
   const [errors, setError] = useState('');
-  const [socket, setSocket] = useState(null);
+
   const fetchBulbState = async () => {
     try {
       const response = await fetch(url); 
       const data = await response.json();
-      if (data.state.state==true){
-        setBulbState("on"); 
+      if (data.state.state === true) {
+        setBulbState("on");
+      } else {
+        setBulbState("off");
       }
-      else{
-        setBulbState("off"); 
-      }
-      setError('')
-      
+      setError('');
     } catch (error) {
-      setError(error);
+      setError("error");
     }
   };
 
-
   useEffect(() => {
-    const ws = new WebSocket(wss); 
+    const ws = new WebSocket(wss);
     ws.onopen = () => {
       console.log('WebSocket connection established');
     };
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.state.state===true){
-        console.log(data);
-        setBulbState("on"); 
+      console.log(data);
+      if (data.state.state === true) {
+        setBulbState("on");
+      } else if (data.state.state === false) {
+        setBulbState("off");
       }
-      else{
-        console.log(data);
-        setBulbState("off"); 
-      }
-      setError('')
+      setError('');
     };
 
     ws.onclose = () => {
       console.log('WebSocket connection closed');
     };
-
-    setSocket(ws);
 
     fetchBulbState();
 
@@ -65,27 +58,33 @@ function App() {
 
   const handleTurnOn = async () => {
     try {
-      const response = await fetch(`${url}`, { 
+      const response = await fetch(url, {
         method: 'POST',
-        data: { "state":true} // Send action data
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ state: true }),
       });
-      console.log(response);
 
       if (response.ok) {
-        setBulbState('on'); 
+        setBulbState('on');
       } else {
         setError("error");
       }
     } catch (error) {
       console.error('Error turning on the bulb:', error);
+      setError("error");
     }
   };
 
   const handleTurnOff = async () => {
     try {
-      const response = await fetch(`${url}`, { 
+      const response = await fetch(url, {
         method: 'POST',
-        data: { "state":"false" } 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ state: false }),
       });
 
       if (response.ok) {
@@ -94,35 +93,30 @@ function App() {
         setError("error");
       }
     } catch (error) {
-      console.log(error.data);
-      setError(error);
+      console.error('Error turning off the bulb:', error);
+      setError("error");
     }
   };
 
-
-console.log(bulbState);
-console.log(errors);
   return (
     <div>
       <div className='header'>
         <div>
-       <h2>IOT Onboarding Workshop</h2>
-       </div>
-       <div>
-    </div>
+          <h2>IOT Onboarding Workshop</h2>
+        </div>
       </div>
+
       <div>
-        {errors=="error"?<Throtted/>:<Ready/>}
+        {errors === "error" ? <Throtted /> : <Ready />}
       </div>
 
       <div className='buttons'>
-
         <div>
           <button className='onbutton' onClick={handleTurnOn}>Turn On</button>
         </div>
-        <div >
+        <div>
           <button className='offbutton' onClick={handleTurnOff}>Turn Off</button>
-        </div>        
+        </div>
       </div>
 
       <div className='Bulbstate'>
@@ -131,4 +125,5 @@ console.log(errors);
     </div>
   );
 }
+
 export default App;
