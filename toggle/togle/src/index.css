@@ -1,0 +1,46 @@
+.throtted{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 50px;
+}
+.header{
+  display: flex;
+  flex-direction: column;
+}
+.buttons{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.onbutton{
+  border-radius: 100px;
+  background-color:blue;
+  height: 40px;
+}
+
+.offbutton{
+  border-radius: 40px;
+  background-color: red;
+  height: 40px;
+}
+
+.Bulbstate{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.offmode{
+border-radius: 300px;
+background-color: red;
+width: 350px;
+padding-left: 20px;
+}
+.onmode{
+  border-radius: 300px;
+  background-color: blue;
+  width: 350px;
+  padding-left: 20px;
+}

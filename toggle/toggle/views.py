@@ -1,16 +1,29 @@
 from .models import BulbState
 from .serializer import BulbStateSerializer
 
-from rest_framework.decorators import APIView
+from rest_framework.decorators import APIView,throttle_classes
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.throttling import AnonRateThrottle,UserRateThrottle
 
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
+from .throttling import PostRateThrottle 
+
+
+class CustomUserRateThrottle(UserRateThrottle):
+    rate= '100/min'
+    def allow_request(self, request, view):
+        if request.method == 'POST':
+            return super().allow_request(request, view)
+        return True  # Allow other methods (GET, etc.) without throttling
+
+
 class ToggleBulb(APIView):
+    throttle_classes = [CustomUserRateThrottle]
     def get(self, request):
         try:
             state = BulbState.objects.last()  # Fetch the last state

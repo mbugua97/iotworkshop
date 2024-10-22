@@ -1,9 +1,13 @@
 version: "2.1"
 services:
-  myapp:
+  backend:
     build: .
     ports:
       - "8200:8200"
+  frontend:
+    build: ./togle
+    ports:
+      - "8400:80"
   redis:
     image: redis:latest
     ports:
