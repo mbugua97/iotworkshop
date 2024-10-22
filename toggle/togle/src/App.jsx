@@ -36,10 +36,11 @@ function App() {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log(data);
-      if (data.state.state === true) {
+      console.log(data.state);
+      if (data.state ==true) {
+        console.log("turned on");
         setBulbState("on");
-      } else if (data.state.state === false) {
+      } else if (data.state== false) {
         setBulbState("off");
       }
       setError('');
