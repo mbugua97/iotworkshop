@@ -1,43 +1,41 @@
-from . models import BulbState
-from . serializer import BulbStateSerializer
-
-
-
+from .models import BulbState
+from .serializer import BulbStateSerializer
 
 from rest_framework.decorators import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-
-
-
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
-
+from channels.generic.websocket import AsyncWebsocketConsumer
+import json
 
 class ToggleBulb(APIView):
-    def get(self,request):
+    def get(self, request):
+        try:
+            state = BulbState.objects.last()  # Fetch the last state
+            if state is None:
+                return Response({"state": None}, status=status.HTTP_404_NOT_FOUND)
 
+            data = BulbStateSerializer(state).data  # Serialize the state
+            return Response({"state": data}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def post(self, request):
         try:
-            state=BulbState.objects.filter().last()
-            data=BulbStateSerializer(state)
-            return Response({"state":data.data},status=status.HTTP_200_OK)
-        except:
-            return Response({"state":None},status=status.HTTP_404_NOT_FOUND)
-        
-    def post(self,request):
-        try:
-            state=BulbStateSerializer(data=request.data)
+            state = BulbStateSerializer(data=request.data)
             if state.is_valid():
                 state.save()
                 channel_layer = get_channel_layer()
                 async_to_sync(channel_layer.group_send)(
-                    'bulb',
+                    'bulbstate',
                     {
                         'type': 'send_update',
                         'data': state.data
                     }
                 )
-                return Response({"message":state.data},status=status.HTTP_201_CREATED)
-        except:
-            return Response({"message":state.data},status=status.HTTP_401_UNAUTHORIZED)
+                return Response({"message": state.data}, status=status.HTTP_201_CREATED)
+            return Response({"message": "failed", "errors": state.errors}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

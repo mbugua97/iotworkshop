@@ -4,5 +4,5 @@ from . views import ToggleBulb
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',ToggleBulb.as_view)
+    path('',ToggleBulb.as_view())
 ]

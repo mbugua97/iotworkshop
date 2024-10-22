@@ -18,4 +18,4 @@ COPY . /app/
 
 EXPOSE 8200
 
-CMD ["uvicorn", "toggle.asgi:application", "--host", "0.0.0.0", "--port", "8000", "--workers", "20"]
+CMD ["uvicorn", "toggle.asgi:application", "--host", "0.0.0.0", "--port", "8200", "--workers", "20"]
