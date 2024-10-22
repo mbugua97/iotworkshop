@@ -124,7 +124,7 @@ console.log(errors);
       </div>
 
       <div className='Bulbstate'>
-        <p>Current Bulb State: {bulbState=="on"?<OffMode/>:<OnMode/>}</p>
+        <p>Current Bulb State: {bulbState=="on"?<OnMode/>:<OffMode/>}</p>
       </div>
     </div>
   );
