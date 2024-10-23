@@ -65,6 +65,7 @@ function App() {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
+      console.log(data);
       const countProperties = (obj) => {
         return Object.keys(obj).length;
       };
@@ -87,6 +88,7 @@ function App() {
         setMois(1023-data.moisture); // Adjusted as per your logic
         setfreq(data.frequency);  
       }
+    
       setError('');
     };
 
