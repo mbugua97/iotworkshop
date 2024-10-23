@@ -11,7 +11,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json,requests
 
-Root_url='http://16.16.70.217:8200'
+Root_url='http://172.31.12.175:8200'
 
 
 from .throttling import PostRateThrottle 
