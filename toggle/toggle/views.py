@@ -1,5 +1,5 @@
-from .models import BulbState,TempratureHumidity
-from .serializer import BulbStateSerializer,TempHumSeri
+from .models import BulbState,TempratureHumidity,power
+from .serializer import BulbStateSerializer,TempHumSeri,powerSeri
 
 from rest_framework.decorators import APIView,throttle_classes
 from rest_framework.response import Response
@@ -87,6 +87,16 @@ class Temp(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+
+
+
+class Power(APIView):
+    throttle_classes = [CustomUserRateThrottle]
+    def get(self,request):
+        data=power.objects.last()
+        dataseri=powerSeri(data)
+        return Response(dataseri.data)
+
 
 class Listener(APIView):
     throttle_classes = [CustomUserRateThrottle]

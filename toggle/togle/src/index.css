@@ -8,6 +8,22 @@
 .header{
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Bebas Neue", serif;
+  font-weight: 300;
+  font-style: normal;
+}
+.bulb{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+.buttonsbulb{
+  display: flex;
+  flex-direction: column;
+  padding-top: 300px;
 }
 .buttons{
   display: flex;
@@ -15,14 +31,21 @@
   justify-content: center;
   align-items: center;
 }
+.sensor-data{
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
 .onbutton{
-  border-radius: 100px;
+  border-radius: 10px;
   background-color:blue;
   height: 40px;
 }
 
 .offbutton{
-  border-radius: 40px;
+  border-radius: 10px;
   background-color: red;
   height: 40px;
 }
@@ -43,4 +66,7 @@ padding-left: 20px;
   background-color: blue;
   width: 350px;
   padding-left: 20px;
+}
+.voltsamps{
+  padding-left: 30px;
 }
