@@ -89,6 +89,7 @@ class Temp(APIView):
         
 
 class Listener(APIView):
+    throttle_classes = [CustomUserRateThrottle]
     def post(self, request):
         data = request.data
         print("Received data:", data)
@@ -112,7 +113,7 @@ class Listener(APIView):
 
             # Prepare data to forward
             forward_data = {
-                "temp": str(temperature),
+                "temprature": str(temperature),
                 "humidity": str(humidity),
                 "pressure": str(pressure),
                 "moisture": str(moisture),
