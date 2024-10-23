@@ -1,0 +1,17 @@
+{
+    "marker": {
+      "type": "video",
+      "shape": "round",
+      "style": {
+        "backgroundColor": "blue",
+        "glow": true,
+        "glowColor": "lightblue"
+      },
+      "position": {
+        "latitude": 0,
+        "longitude": 0
+      },
+      "videoUrl": "https://example.com/video1.mp4"
+    }
+  }
+  

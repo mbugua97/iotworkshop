@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 
+import MapMarkers from './on';
+
 import Throtted from './throtted.component';
 import Ready from './ready.component';
 import OnMode from './on';
