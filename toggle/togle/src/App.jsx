@@ -1,24 +1,45 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 
-import MapMarkers from './on';
-
 import Throtted from './throtted.component';
 import Ready from './ready.component';
-import OnMode from './on';
-import OffMode from './off';
 
-const url = "http://16.16.70.217:8200/"; 
+const url = "http://16.16.70.217:8200/";
 const wss = "ws://16.16.70.217:8200/ws/bulbstate/";
+
 
 function App() {
   const [bulbState, setBulbState] = useState('');
+  const [Temp, setTemp] = useState('');
+  const [Hum, setHum] = useState('');
+  const [Pressure, setPres] = useState('');
+  const [moisture, setMois] = useState('');
+  const [freq, setfreq] = useState('');
   const [errors, setError] = useState('');
+
+  const fetchTemp = async () => {
+    try {
+      const response = await fetch(`${url}temp/`); 
+      const data = await response.json();
+      
+      // Assuming API returns the values like this
+      setTemp(data.state.temprature);
+      setHum(data.state.humidity); 
+      setPres(data.state.pressure); 
+      setMois(data.state.moisture - 1023); // Adjusted as per your logic
+      setfreq(data.state.frequency);  
+    } catch (error) {
+      console.log("Error fetching temperature data:", error);
+      setError("error");
+    }
+  };
 
   const fetchBulbState = async () => {
     try {
       const response = await fetch(url); 
       const data = await response.json();
+      
+      // Check the state and set accordingly
       if (data.state.state === true) {
         setBulbState("on");
       } else {
@@ -32,18 +53,34 @@ function App() {
 
   useEffect(() => {
     const ws = new WebSocket(wss);
+    
     ws.onopen = () => {
       console.log('WebSocket connection established');
     };
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log(data.state);
-      if (data.state ==true) {
-        console.log("turned on");
-        setBulbState("on");
-      } else if (data.state== false) {
-        setBulbState("off");
+      const countProperties = (obj) => {
+        return Object.keys(obj).length;
+      };
+
+      const propert=countProperties(data);
+
+      if (propert==2) {
+        if (data.state === true) {
+          console.log("Bulb turned on");
+          setBulbState("on");
+        } else if (data.state === false) {
+          setBulbState("off");
+        }
+      }
+      if(propert==6){
+        console.log(data);
+        setTemp(data.temprature);
+        setHum(data.humidity); 
+        setPres(data.pressure); 
+        setMois(data.moisture - 1023); // Adjusted as per your logic
+        setfreq(data.frequency);  
       }
       setError('');
     };
@@ -53,6 +90,7 @@ function App() {
     };
 
     fetchBulbState();
+    fetchTemp();
 
     return () => {
       ws.close();
@@ -104,9 +142,7 @@ function App() {
   return (
     <div>
       <div className='header'>
-        <div>
-          <h2>IOT Onboarding Workshop</h2>
-        </div>
+        <h2>IOT Onboarding Workshop</h2>
       </div>
 
       <div>
@@ -114,16 +150,20 @@ function App() {
       </div>
 
       <div className='buttons'>
-        <div>
-          <button className='onbutton' onClick={handleTurnOn}>Turn On</button>
-        </div>
-        <div>
-          <button className='offbutton' onClick={handleTurnOff}>Turn Off</button>
-        </div>
+        <button className='onbutton' onClick={handleTurnOn}>Turn On</button>
+        <button className='offbutton' onClick={handleTurnOff}>Turn Off</button>
       </div>
 
       <div className='Bulbstate'>
         <p>Current Bulb State: {bulbState}</p>
+      </div>
+
+      <div className='sensor-data'>
+        <p>Temperature: {Temp} °C</p>
+        <p>Humidity: {Hum} %</p>
+        <p>Pressure: {Pressure} hPa</p>
+        <p>Moisture: {moisture}</p>
+        <p>Frequency: {freq}</p>
       </div>
     </div>
   );
