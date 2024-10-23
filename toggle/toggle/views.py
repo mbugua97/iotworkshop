@@ -91,15 +91,12 @@ class Temp(APIView):
 class Listener(APIView):
     throttle_classes = [CustomUserRateThrottle]
     def post(self, request):
-        data = request.data
-        print("Received data:", data)
-
-        try:
+            data = request.data
+            print("Received data:", data)
             # Access the decoded payload directly from the incoming request data
             decoded_payload = data.get('uplink_message', {}).get('decoded_payload', {})
             if not decoded_payload:
                 return Response("Decoded payload is missing", status=status.HTTP_400_BAD_REQUEST)
-
             # Extract values from the decoded payload
             temperature = decoded_payload.get('dhtTemperature')
             humidity = decoded_payload.get('dhtHumidity')
@@ -119,21 +116,7 @@ class Listener(APIView):
                 "moisture": str(moisture),
                 "frequency": str(frequency)
             }
-
-            forward_url = Root_url + "/temp/"
-            headers = {
-                "Content-Type": "application/json",
-            }
-
+            forward_url = Root_url+ "/temp/"
             # Forward the data
-            response = requests.post(forward_url, data=forward_data, headers=headers)
-            response.raise_for_status()  # Raise an error for HTTP error responses
-            print("Data forwarded successfully.")
+            response = requests.post(forward_url, data=forward_data)
             return Response("Data forwarded successfully", status=status.HTTP_200_OK)
-
-        except requests.exceptions.HTTPError as http_err:
-            print(f"HTTP error occurred: {http_err}")
-            return Response(f"HTTP error occurred: {http_err}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        except Exception as e:
-            print(f"Failed to process or forward data: {e}")
-            return Response(f"Failed to process or forward data: {str(e)}", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
