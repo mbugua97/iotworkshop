@@ -178,10 +178,7 @@ function App() {
       </div>
 
 </div>
-      <div className='voltsamps'>
-        <div>voltage:{voltage}</div>
-        <div>current:{current}</div>
-      </div>
+    
 
 
 
