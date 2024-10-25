@@ -8,7 +8,7 @@ import Ready from './ready.component';
 import Lottie from 'lottie-react';
 
 const url = "http://16.16.70.217:8200/";
-const wss = "ws://127.0.0.1:8100/ws/bulbstate/";
+const wss = "ws://16.16.70.217:8100/ws/bulbstate/";
 
 
 function App() {
@@ -178,10 +178,10 @@ function App() {
       </div>
 
 </div>
-      {/* <div className='voltsamps'>
+      <div className='voltsamps'>
         <div>voltage:{voltage}</div>
         <div>current:{current}</div>
-      </div> */}
+      </div>
 
 
 
